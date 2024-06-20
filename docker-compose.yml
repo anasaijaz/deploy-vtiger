@@ -1,0 +1,35 @@
+version: '3.7'
+services:
+  vtigeropensource:
+    ports:
+      - "${host_port:-80}:80"
+    image: vtigercrm/vtigercrm-8.2.0:latest
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: vtiger
+      MYSQL_USER: ${mysql_user:-admin}
+      MYSQL_PASSWORD: ${mysql_pass:-admin}
+    depends_on:
+      - mysql
+    volumes:
+      - vtiger_source_volume:/var/www/html/
+      - vtiger_mysql_data_volume:/var/lib/mysql
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: ${mysql_root_password:-root}
+      MYSQL_DATABASE: vtiger
+      MYSQL_USER: ${mysql_user:-admin}
+      MYSQL_PASSWORD: ${mysql_pass:-admin}
+    volumes:
+      - mysql_data_volume:/var/lib/mysql
+
+volumes:
+  vtiger_source_volume:
+    name: vtiger_source_volume 
+  vtiger_mysql_data_volume:
+    name: vtiger_mysql_data_volume
+  mysql_data_volume:
+    name: mysql_data_volume
